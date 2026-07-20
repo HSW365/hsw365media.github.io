@@ -1,0 +1,19 @@
+{
+  "name": "Friendy — Make Real Friends",
+  "short_name": "Friendy",
+  "description": "A kind, safe place to meet friends who get you. Match on shared interests, chat, and make real friends.",
+  "id": "./app.html",
+  "start_url": "./app.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FAF7FC",
+  "theme_color": "#FF5E7E",
+  "categories": ["social", "lifestyle"],
+  "icons": [
+    { "src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "assets/icon-1024.png", "sizes": "1024x1024", "type": "image/png", "purpose": "any" }
+  ]
+}

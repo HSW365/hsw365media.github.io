@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 160" role="img" aria-label="Friendy">
+  <defs>
+    <linearGradient id="lg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FFB03A"/>
+      <stop offset="0.55" stop-color="#FF5E7E"/>
+      <stop offset="1" stop-color="#A855F7"/>
+    </linearGradient>
+  </defs>
+  <g>
+    <rect x="8" y="8" width="144" height="144" rx="36" fill="url(#lg)"/>
+    <rect x="88" y="26" width="46" height="33" rx="16.5" fill="#FFFFFF" opacity="0.35"/>
+    <rect x="30" y="44" width="90" height="70" rx="24" fill="#FFFFFF"/>
+    <path d="M47 108 L47 132 Q47 136 51 133 L72 113 Z" fill="#FFFFFF"/>
+    <circle cx="62" cy="72" r="5.5" fill="#FF4E75"/>
+    <circle cx="90" cy="72" r="5.5" fill="#FF4E75"/>
+    <path d="M59 87 Q76 101 93 87" fill="none" stroke="#FF4E75" stroke-width="7" stroke-linecap="round"/>
+  </g>
+  <text x="180" y="106" font-family="'Nunito','Segoe UI',system-ui,-apple-system,sans-serif" font-size="76" font-weight="800" fill="#1F1235" letter-spacing="-1">Friendy</text>
+</svg>

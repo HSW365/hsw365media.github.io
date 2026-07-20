@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="Friendy"/>
+<meta name="theme-color" content="#FF5E7E"/>
+<meta name="description" content="Friendy — meet friends who get you. A kind, safe place to make real friends."/>
+<title>Friendy</title>
+<link rel="manifest" href="manifest.webmanifest"/>
+<link rel="icon" type="image/png" sizes="32x32" href="assets/icon-32.png"/>
+<link rel="apple-touch-icon" href="assets/icon-180.png"/>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --grad:linear-gradient(135deg,#FFB03A 0%,#FF5E7E 55%,#A855F7 100%);
+  --pink:#FF5E7E;--pink-d:#E84A6B;--purple:#A855F7;--sun:#FFB03A;
+  --ink:#1F1235;--mid:#6B5E80;--dim:#A79DBB;
+  --bg:#FAF7FC;--card:#FFFFFF;--line:#EFE9F6;
+  --ok:#22C55E;--danger:#E11D48;
+  --sat:env(safe-area-inset-top,0px);--sab:env(safe-area-inset-bottom,0px);
+}
+html,body{height:100%}
+body{
+  font-family:'Nunito','Segoe UI',system-ui,-apple-system,sans-serif;
+  background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;
+  -webkit-tap-highlight-color:transparent;overscroll-behavior:none;
+}
+#app{max-width:520px;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column;position:relative}
+button{font-family:inherit;border:none;background:none;cursor:pointer;color:inherit}
+input,textarea,select{font-family:inherit;font-size:16px}
+.hide{display:none!important}
+
+/* ---------- shared ---------- */
+.screen{flex:1;display:flex;flex-direction:column;padding-bottom:calc(78px + var(--sab))}
+.topbar{
+  position:sticky;top:0;z-index:20;padding:calc(14px + var(--sat)) 20px 12px;
+  background:rgba(250,247,252,.92);backdrop-filter:blur(14px);
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+}
+.topbar h1{font-size:26px;font-weight:900;letter-spacing:-.5px}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  background:var(--grad);color:#fff;font-weight:800;font-size:16px;
+  padding:15px 26px;border-radius:18px;width:100%;
+  box-shadow:0 8px 22px rgba(255,94,126,.35);transition:transform .12s,box-shadow .12s;
+}
+.btn:active{transform:scale(.97)}
+.btn.secondary{background:#fff;color:var(--ink);box-shadow:none;border:2px solid var(--line)}
+.btn.danger{background:#FFF1F2;color:var(--danger);box-shadow:none}
+.btn:disabled{opacity:.45;pointer-events:none}
+.chip{
+  display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:999px;
+  border:2px solid var(--line);background:#fff;font-weight:700;font-size:14px;color:var(--mid);
+  transition:all .12s;
+}
+.chip.on{border-color:var(--pink);background:#FFF0F4;color:var(--pink-d)}
+.card{background:var(--card);border-radius:22px;border:1px solid var(--line);box-shadow:0 4px 18px rgba(31,18,53,.05)}
+
+/* ---------- onboarding ---------- */
+.ob{flex:1;display:flex;flex-direction:column;justify-content:center;padding:calc(30px + var(--sat)) 28px calc(30px + var(--sab));min-height:100dvh}
+.ob-hero{text-align:center;margin-bottom:26px}
+.ob-hero img{width:96px;height:96px;border-radius:24px;box-shadow:0 12px 30px rgba(255,94,126,.35)}
+.ob h2{font-size:30px;font-weight:900;letter-spacing:-.6px;margin:14px 0 8px;text-align:center}
+.ob p.sub{color:var(--mid);font-size:16px;line-height:1.55;text-align:center;margin-bottom:26px}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:13px;font-weight:800;color:var(--mid);text-transform:uppercase;letter-spacing:.06em;margin-bottom:7px}
+.field input,.field textarea{
+  width:100%;padding:14px 16px;border-radius:16px;border:2px solid var(--line);
+  background:#fff;color:var(--ink);outline:none;
+}
+.field input:focus,.field textarea:focus{border-color:var(--pink)}
+.avatar-row{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.avatar-pick{width:52px;height:52px;border-radius:16px;font-size:26px;background:#fff;border:2px solid var(--line);display:flex;align-items:center;justify-content:center}
+.avatar-pick.on{border-color:var(--pink);background:#FFF0F4;transform:scale(1.08)}
+.chips{display:flex;flex-wrap:wrap;gap:9px;justify-content:center}
+.agree{display:flex;gap:11px;align-items:flex-start;background:#fff;border:2px solid var(--line);border-radius:16px;padding:14px;margin-bottom:14px;text-align:left}
+.agree input{width:20px;height:20px;margin-top:2px;accent-color:var(--pink);flex-shrink:0}
+.agree span{font-size:14px;color:var(--mid);line-height:1.5}
+.agree a{color:var(--pink-d);font-weight:700;text-decoration:none}
+.dots{display:flex;gap:7px;justify-content:center;margin-bottom:22px}
+.dots i{width:8px;height:8px;border-radius:50%;background:var(--line)}
+.dots i.on{background:var(--pink);width:22px;border-radius:99px}
+
+/* ---------- discover ---------- */
+.deck{padding:6px 20px 12px;display:flex;flex-direction:column;gap:16px}
+.pcard{padding:22px;position:relative}
+.pcard .ava{width:74px;height:74px;border-radius:22px;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:38px;box-shadow:0 6px 16px rgba(255,94,126,.3)}
+.pcard .head{display:flex;gap:16px;align-items:center;margin-bottom:12px}
+.pcard h3{font-size:21px;font-weight:900}
+.pcard .meta{color:var(--dim);font-size:14px;font-weight:700}
+.pcard .bio{color:var(--mid);font-size:15px;line-height:1.55;margin-bottom:14px}
+.tags{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px}
+.tag{font-size:12.5px;font-weight:800;padding:6px 12px;border-radius:999px;background:var(--bg);color:var(--mid);border:1px solid var(--line)}
+.tag.match{background:#FFF0F4;color:var(--pink-d);border-color:#FFD3DE}
+.pcard .actions{display:flex;gap:10px}
+.pcard .actions .btn{padding:13px}
+.kebab{position:absolute;top:16px;right:16px;width:36px;height:36px;border-radius:12px;color:var(--dim);font-size:20px;font-weight:900;display:flex;align-items:center;justify-content:center}
+.kebab:active{background:var(--bg)}
+.empty{padding:60px 30px;text-align:center;color:var(--mid)}
+.empty .big{font-size:52px;margin-bottom:12px}
+.empty h3{font-size:20px;font-weight:900;color:var(--ink);margin-bottom:8px}
+
+/* ---------- chats ---------- */
+.chat-list{padding:4px 20px;display:flex;flex-direction:column;gap:10px}
+.chat-item{display:flex;gap:14px;align-items:center;padding:14px 16px;text-align:left;width:100%}
+.chat-item .ava{width:54px;height:54px;border-radius:18px;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:27px;flex-shrink:0}
+.chat-item .ci-body{flex:1;min-width:0}
+.chat-item h4{font-size:16.5px;font-weight:900}
+.chat-item p{color:var(--mid);font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.badge{background:var(--pink);color:#fff;font-size:11.5px;font-weight:900;min-width:20px;height:20px;border-radius:99px;display:flex;align-items:center;justify-content:center;padding:0 6px}
+
+/* thread */
+#thread{position:fixed;inset:0;z-index:40;background:var(--bg);display:flex;flex-direction:column;max-width:520px;margin:0 auto}
+.th-top{display:flex;align-items:center;gap:12px;padding:calc(12px + var(--sat)) 14px 10px;background:rgba(250,247,252,.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.th-top .back{font-size:24px;font-weight:900;color:var(--pink-d);width:38px;height:38px}
+.th-top .ava{width:40px;height:40px;border-radius:14px;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:21px}
+.th-top h4{font-size:17px;font-weight:900;flex:1}
+.msgs{flex:1;overflow-y:auto;padding:18px 16px;display:flex;flex-direction:column;gap:9px}
+.msg{max-width:78%;padding:11px 15px;border-radius:19px;font-size:15.5px;line-height:1.45}
+.msg.me{align-self:flex-end;background:var(--grad);color:#fff;border-bottom-right-radius:6px}
+.msg.them{align-self:flex-start;background:#fff;border:1px solid var(--line);border-bottom-left-radius:6px}
+.composer{display:flex;gap:10px;padding:10px 14px calc(12px + var(--sab));background:var(--bg);border-top:1px solid var(--line)}
+.composer input{flex:1;padding:13px 17px;border-radius:999px;border:2px solid var(--line);outline:none;background:#fff}
+.composer input:focus{border-color:var(--pink)}
+.composer button{width:48px;height:48px;border-radius:50%;background:var(--grad);color:#fff;font-size:19px;flex-shrink:0;box-shadow:0 6px 14px rgba(255,94,126,.35)}
+
+/* ---------- profile ---------- */
+.prof{padding:8px 20px;display:flex;flex-direction:column;gap:14px}
+.me-card{padding:24px;text-align:center}
+.me-card .ava{width:88px;height:88px;border-radius:26px;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:46px;margin:0 auto 12px;box-shadow:0 8px 20px rgba(255,94,126,.3)}
+.me-card h3{font-size:23px;font-weight:900}
+.me-card p{color:var(--mid);font-size:15px;margin-top:6px;line-height:1.5}
+.list{overflow:hidden}
+.row{display:flex;align-items:center;gap:13px;width:100%;padding:16px 18px;text-align:left;font-size:15.5px;font-weight:700;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:none}
+.row .ic{width:34px;height:34px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.row .grow{flex:1}
+.row .chev{color:var(--dim)}
+.row.red{color:var(--danger)}
+
+/* ---------- tabbar ---------- */
+.tabbar{
+  position:fixed;bottom:0;left:0;right:0;z-index:30;max-width:520px;margin:0 auto;
+  display:flex;background:rgba(255,255,255,.94);backdrop-filter:blur(16px);
+  border-top:1px solid var(--line);padding:8px 6px calc(8px + var(--sab));
+}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;font-weight:800;color:var(--dim);padding:6px 0;position:relative}
+.tab .t-ic{font-size:23px;line-height:1;filter:grayscale(1);opacity:.55;transition:all .15s}
+.tab.on{color:var(--pink-d)}
+.tab.on .t-ic{filter:none;opacity:1;transform:scale(1.12)}
+.tab .badge{position:absolute;top:0;right:calc(50% - 26px)}
+
+/* ---------- sheet / modal ---------- */
+.sheet-wrap{position:fixed;inset:0;z-index:60;background:rgba(31,18,53,.45);display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:#fff;border-radius:26px 26px 0 0;width:100%;max-width:520px;padding:22px 22px calc(24px + var(--sab))}
+.sheet h3{font-size:19px;font-weight:900;margin-bottom:6px}
+.sheet p.s-sub{color:var(--mid);font-size:14.5px;line-height:1.5;margin-bottom:16px}
+.sheet .btn{margin-bottom:10px}
+.sheet select,.sheet textarea{width:100%;padding:13px 15px;border-radius:14px;border:2px solid var(--line);margin-bottom:12px;outline:none;background:#fff}
+.toast{
+  position:fixed;left:50%;transform:translateX(-50%);bottom:calc(96px + var(--sab));z-index:80;
+  background:var(--ink);color:#fff;font-weight:800;font-size:14px;padding:12px 20px;border-radius:999px;
+  box-shadow:0 10px 26px rgba(31,18,53,.35);opacity:0;transition:opacity .25s;pointer-events:none;max-width:88%;text-align:center;
+}
+.toast.show{opacity:1}
+.section-label{font-size:12.5px;font-weight:900;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;padding:6px 4px 0}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+/* ================= Friendy — local-first demo app =================
+   All data lives in localStorage on this device only.               */
+
+const STORE_KEY = "friendy.v1";
+const INTERESTS = ["🎮 Gaming","🎵 Music","🏀 Hoops","🍳 Cooking","🎨 Art","📚 Books","🥾 Hiking","🎬 Movies","💪 Fitness","✈️ Travel","🐶 Dogs","🐱 Cats","📷 Photo","🧘 Wellness","💻 Tech","⚽ Soccer"];
+const AVATARS = ["😀","😎","🤗","🦊","🐼","🦁","🐸","🐨","🌟","🌈","🔥","🌸","🦋","🍀","🎧","👑"];
+
+const PEOPLE = [
+  {id:"p1", name:"Maya",   age:24, avatar:"🌸", bio:"New to the city and looking for museum buddies and coffee-shop co-workers. I laugh at my own jokes.", interests:["🎨 Art","📚 Books","📷 Photo","🧘 Wellness"]},
+  {id:"p2", name:"Jordan", age:27, avatar:"🏀", bio:"Weekend baller, weekday coder. Always down for pickup games or trying a new taco spot.", interests:["🏀 Hoops","💻 Tech","🎮 Gaming","🍳 Cooking"]},
+  {id:"p3", name:"Sam",    age:22, avatar:"🎧", bio:"Making playlists nobody asked for. Looking for concert friends and people to argue about albums with.", interests:["🎵 Music","🎬 Movies","✈️ Travel","🎨 Art"]},
+  {id:"p4", name:"Priya",  age:29, avatar:"🥾", bio:"Sunrise hiker, golden-retriever mom. I will absolutely show you 100 photos of my dog.", interests:["🥾 Hiking","🐶 Dogs","💪 Fitness","📷 Photo"]},
+  {id:"p5", name:"Leo",    age:25, avatar:"🍳", bio:"Home chef testing recipes on brave volunteers. Board-game nights are my love language.", interests:["🍳 Cooking","🎮 Gaming","📚 Books","🎵 Music"]},
+  {id:"p6", name:"Aisha",  age:26, avatar:"🌈", bio:"Marathon-in-training (the Netflix kind and the running kind). Let's swap book recs!", interests:["💪 Fitness","📚 Books","🎬 Movies","🧘 Wellness"]},
+  {id:"p7", name:"Diego",  age:31, avatar:"⚽", bio:"Sunday-league keeper, amateur photographer. New friends and new trails always welcome.", interests:["⚽ Soccer","📷 Photo","🥾 Hiking","✈️ Travel"]},
+  {id:"p8", name:"Nia",    age:23, avatar:"🐱", bio:"Cat person, plant person, pottery-class person. Quiet hangs > loud parties.", interests:["🐱 Cats","🎨 Art","📚 Books","🍳 Cooking"]}
+];
+
+const REPLIES = [
+  "That's awesome! 😄 Tell me more!",
+  "Haha same here honestly 😂",
+  "Ooh nice — we should totally do that together sometime!",
+  "Love that! What got you into it?",
+  "No way, me too! Small world 🌍",
+  "That sounds really fun. Count me in! 🙌",
+  "Good question! I'd say weekends are best for me. You?",
+  "😂😂 okay that made me laugh"
+];
+
+/* very small kindness filter — demo of Apple UGC guideline 1.2 content moderation */
+const BLOCKED_WORDS = ["stupid","idiot","hate you","ugly","loser","shut up","dumb"];
+
+/* ---------- state ---------- */
+let S = load();
+function load(){
+  try { const raw = localStorage.getItem(STORE_KEY); if (raw) return JSON.parse(raw); } catch(e){}
+  return { onboarded:false, me:{name:"",avatar:"😀",bio:"",interests:[]}, skipped:[], friends:[], chats:{}, unread:{}, blocked:[], notif:true };
+}
+function save(){ localStorage.setItem(STORE_KEY, JSON.stringify(S)); }
+
+let tab = "discover";
+let obStep = 0;
+let obDraft = { agreed:false, age:false, name:"", avatar:"😀", bio:"", interests:[] };
+
+/* ---------- helpers ---------- */
+const $ = sel => document.querySelector(sel);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("show"); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove("show"),2400); }
+function person(id){ return PEOPLE.find(p=>p.id===id); }
+function unreadTotal(){ return Object.values(S.unread).reduce((a,b)=>a+b,0); }
+
+/* ---------- render root ---------- */
+function render(){
+  const app = $("#app");
+  if (!S.onboarded){ app.innerHTML = renderOnboarding(); wireOnboarding(); return; }
+  app.innerHTML = `
+    ${tab==="discover" ? renderDiscover() : tab==="chats" ? renderChats() : renderProfile()}
+    <nav class="tabbar" role="tablist" aria-label="Main navigation">
+      ${tabBtn("discover","🧭","Discover")}
+      ${tabBtn("chats","💬","Chats", unreadTotal())}
+      ${tabBtn("profile","🙂","Profile")}
+    </nav>`;
+  wireTabs();
+  if (tab==="discover") wireDiscover();
+  if (tab==="chats") wireChats();
+  if (tab==="profile") wireProfile();
+}
+function tabBtn(id,ic,label,badge){
+  return `<button class="tab ${tab===id?"on":""}" data-tab="${id}" role="tab" aria-selected="${tab===id}">
+    <span class="t-ic">${ic}</span>${label}${badge?`<span class="badge">${badge}</span>`:""}</button>`;
+}
+function wireTabs(){
+  document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{ tab=b.dataset.tab; render(); });
+}
+
+/* ---------- onboarding ---------- */
+function renderOnboarding(){
+  const dots = `<div class="dots">${[0,1,2].map(i=>`<i class="${i===obStep?"on":""}"></i>`).join("")}</div>`;
+  if (obStep===0) return `
+    <div class="ob">
+      <div class="ob-hero"><img src="assets/icon-180.png" alt="Friendy logo"/></div>
+      <h2>Welcome to Friendy</h2>
+      <p class="sub">A kind, low-pressure place to meet friends who get you. No follower counts. No weirdness. Just people.</p>
+      ${dots}
+      <button class="btn" id="ob-next">Let's go 👋</button>
+    </div>`;
+  if (obStep===1) return `
+    <div class="ob">
+      <h2>Quick ground rules</h2>
+      <p class="sub">Friendy is built on kindness and safety. Two quick confirmations before we start:</p>
+      <label class="agree"><input type="checkbox" id="ck-age" ${obDraft.age?"checked":""}/>
+        <span><b>I'm 13 or older.</b> Friendy is for teens and adults. Users under 18 should have a parent or guardian's permission.</span></label>
+      <label class="agree"><input type="checkbox" id="ck-tos" ${obDraft.agreed?"checked":""}/>
+        <span>I agree to the <a href="terms.html" target="_blank" rel="noopener">Terms of Service</a>, <a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a> and <a href="guidelines.html" target="_blank" rel="noopener">Community Guidelines</a>, and I understand there is zero tolerance for abusive content.</span></label>
+      ${dots}
+      <button class="btn" id="ob-next" ${obDraft.age&&obDraft.agreed?"":"disabled"}>Continue</button>
+    </div>`;
+  return `
+    <div class="ob">
+      <h2>Make it yours</h2>
+      <p class="sub">This is how new friends will see you.</p>
+      <div class="field"><label>Pick an avatar</label>
+        <div class="avatar-row">${AVATARS.map(a=>`<button class="avatar-pick ${obDraft.avatar===a?"on":""}" data-a="${a}">${a}</button>`).join("")}</div></div>
+      <div class="field"><label>Your first name</label>
+        <input id="ob-name" maxlength="20" placeholder="e.g. Alex" value="${esc(obDraft.name)}"/></div>
+      <div class="field"><label>A line about you</label>
+        <input id="ob-bio" maxlength="90" placeholder="e.g. New in town, chasing good coffee" value="${esc(obDraft.bio)}"/></div>
+      <div class="field"><label>Pick 3+ interests</label>
+        <div class="chips">${INTERESTS.map(i=>`<button class="chip ${obDraft.interests.includes(i)?"on":""}" data-i="${esc(i)}">${i}</button>`).join("")}</div></div>
+      ${dots}
+      <button class="btn" id="ob-done" ${obDraft.name.trim()&&obDraft.interests.length>=3?"":"disabled"}>Start making friends 🎉</button>
+    </div>`;
+}
+function wireOnboarding(){
+  const next = $("#ob-next");
+  if (next) next.onclick = ()=>{ obStep++; render(); };
+  const age=$("#ck-age"), tos=$("#ck-tos");
+  if (age) age.onchange = e=>{ obDraft.age=e.target.checked; render(); };
+  if (tos) tos.onchange = e=>{ obDraft.agreed=e.target.checked; render(); };
+  document.querySelectorAll(".avatar-pick").forEach(b=>b.onclick=()=>{ obDraft.avatar=b.dataset.a; snapshotDraft(); render(); });
+  document.querySelectorAll(".chip[data-i]").forEach(b=>b.onclick=()=>{
+    const i=b.dataset.i, ix=obDraft.interests.indexOf(i);
+    ix>=0 ? obDraft.interests.splice(ix,1) : obDraft.interests.push(i);
+    snapshotDraft(); render();
+  });
+  const nameEl=$("#ob-name"), bioEl=$("#ob-bio");
+  if (nameEl) nameEl.oninput = ()=>{ obDraft.name=nameEl.value; $("#ob-done").disabled = !(obDraft.name.trim()&&obDraft.interests.length>=3); };
+  if (bioEl) bioEl.oninput = ()=>{ obDraft.bio=bioEl.value; };
+  const done=$("#ob-done");
+  if (done) done.onclick = ()=>{
+    S.me = { name:obDraft.name.trim(), avatar:obDraft.avatar, bio:obDraft.bio.trim(), interests:[...obDraft.interests] };
+    S.onboarded = true; save(); tab="discover"; render();
+    toast(`Welcome, ${S.me.name}! 💛`);
+  };
+}
+function snapshotDraft(){ // keep typed values across re-render
+  const n=$("#ob-name"), b=$("#ob-bio");
+  if (n) obDraft.name=n.value; if (b) obDraft.bio=b.value;
+}
+
+/* ---------- discover ---------- */
+function suggestions(){
+  return PEOPLE.filter(p=>!S.friends.includes(p.id) && !S.skipped.includes(p.id) && !S.blocked.includes(p.id));
+}
+function renderDiscover(){
+  const list = suggestions();
+  return `
+  <div class="screen">
+    <div class="topbar"><h1>Discover</h1>
+      ${S.skipped.length?`<button class="chip" id="reset-skips">↺ Reshow skipped</button>`:""}
+    </div>
+    <div class="deck">
+      ${list.length ? list.map(p=>{
+        return `<div class="card pcard" data-id="${p.id}">
+          <button class="kebab" data-menu="${p.id}" aria-label="More options">⋯</button>
+          <div class="head"><div class="ava">${p.avatar}</div>
+            <div><h3>${esc(p.name)}, ${p.age}</h3><div class="meta">${sharedCount(p)} shared interest${sharedCount(p)===1?"":"s"}</div></div></div>
+          <p class="bio">${esc(p.bio)}</p>
+          <div class="tags">${p.interests.map(i=>`<span class="tag ${S.me.interests.includes(i)?"match":""}">${i}</span>`).join("")}</div>
+          <div class="actions">
+            <button class="btn secondary" data-skip="${p.id}">Skip</button>
+            <button class="btn" data-add="${p.id}">➕ Add friend</button>
+          </div></div>`;
+      }).join("") : `<div class="empty"><div class="big">🌱</div><h3>You've met everyone nearby!</h3><p>Check back soon — new people join Friendy every day.${S.skipped.length?" Or reshow the people you skipped.":""}</p></div>`}
+    </div>
+  </div>`;
+}
+function sharedCount(p){ return p.interests.filter(i=>S.me.interests.includes(i)).length; }
+function wireDiscover(){
+  document.querySelectorAll("[data-add]").forEach(b=>b.onclick=()=>{
+    const id=b.dataset.add, p=person(id);
+    S.friends.push(id);
+    S.chats[id] = S.chats[id]||[];
+    S.chats[id].push({who:"them", text:`Hey! I'm ${p.name} 👋 So glad we matched — your interests look super fun!`, t:Date.now()});
+    S.unread[id]=(S.unread[id]||0)+1; save(); render();
+    toast(`You and ${p.name} are now friends! 🎉`);
+  });
+  document.querySelectorAll("[data-skip]").forEach(b=>b.onclick=()=>{ S.skipped.push(b.dataset.skip); save(); render(); });
+  document.querySelectorAll("[data-menu]").forEach(b=>b.onclick=()=>openSafetySheet(b.dataset.menu));
+  const rs=$("#reset-skips"); if (rs) rs.onclick=()=>{ S.skipped=[]; save(); render(); };
+}
+
+/* ---------- chats ---------- */
+function renderChats(){
+  const friends = S.friends.filter(id=>!S.blocked.includes(id));
+  return `
+  <div class="screen">
+    <div class="topbar"><h1>Chats</h1></div>
+    <div class="chat-list">
+      ${friends.length ? friends.map(id=>{
+        const p=person(id), msgs=S.chats[id]||[], last=msgs[msgs.length-1];
+        return `<button class="card chat-item" data-open="${id}">
+          <div class="ava">${p.avatar}</div>
+          <div class="ci-body"><h4>${esc(p.name)}</h4><p>${last?esc(last.text):"Say hi!"}</p></div>
+          ${S.unread[id]?`<span class="badge">${S.unread[id]}</span>`:""}</button>`;
+      }).join("") : `<div class="empty"><div class="big">💬</div><h3>No chats yet</h3><p>Add a friend in Discover and your conversations will show up here.</p></div>`}
+    </div>
+  </div>`;
+}
+function wireChats(){
+  document.querySelectorAll("[data-open]").forEach(b=>b.onclick=()=>openThread(b.dataset.open));
+}
+function openThread(id){
+  const p = person(id);
+  S.unread[id]=0; save();
+  const el = document.createElement("div");
+  el.id = "thread";
+  el.innerHTML = `
+    <div class="th-top">
+      <button class="back" aria-label="Back">‹</button>
+      <div class="ava">${p.avatar}</div><h4>${esc(p.name)}</h4>
+      <button class="kebab" aria-label="More options" style="position:static">⋯</button>
+    </div>
+    <div class="msgs" id="msgs"></div>
+    <div class="composer">
+      <input id="mi" placeholder="Message ${esc(p.name)}…" maxlength="500" autocomplete="off"/>
+      <button id="send" aria-label="Send">➤</button>
+    </div>`;
+  document.body.appendChild(el);
+  const paint = ()=>{
+    $("#msgs").innerHTML = (S.chats[id]||[]).map(m=>`<div class="msg ${m.who==="me"?"me":"them"}">${esc(m.text)}</div>`).join("");
+    $("#msgs").scrollTop = 1e9;
+  };
+  paint();
+  el.querySelector(".back").onclick = ()=>{ el.remove(); render(); };
+  el.querySelector(".kebab").onclick = ()=>openSafetySheet(id, ()=>{ el.remove(); render(); });
+  const send = ()=>{
+    const input=$("#mi"), text=input.value.trim();
+    if (!text) return;
+    const low=text.toLowerCase();
+    if (BLOCKED_WORDS.some(w=>low.includes(w))){ toast("Let's keep Friendy kind 💛 That message wasn't sent."); return; }
+    S.chats[id].push({who:"me",text,t:Date.now()}); save(); input.value=""; paint();
+    setTimeout(()=>{
+      if (!document.getElementById("thread")) { // replied while thread closed
+        S.chats[id].push({who:"them",text:REPLIES[Math.floor(Math.random()*REPLIES.length)],t:Date.now()});
+        S.unread[id]=(S.unread[id]||0)+1; save(); render(); return;
+      }
+      S.chats[id].push({who:"them",text:REPLIES[Math.floor(Math.random()*REPLIES.length)],t:Date.now()});
+      save(); paint();
+    }, 900+Math.random()*1200);
+  };
+  $("#send").onclick = send;
+  $("#mi").onkeydown = e=>{ if (e.key==="Enter") send(); };
+}
+
+/* ---------- safety: report & block (App Review 1.2) ---------- */
+function openSafetySheet(id, onBlocked){
+  const p = person(id);
+  sheet(`
+    <h3>${esc(p.name)}</h3>
+    <p class="s-sub">Your safety comes first. Blocking hides this person everywhere, instantly. Reports are reviewed and acted on within 24 hours.</p>
+    <button class="btn danger" id="sh-block">🚫 Block ${esc(p.name)}</button>
+    <button class="btn danger" id="sh-report">🚩 Report ${esc(p.name)}</button>
+    <button class="btn secondary" id="sh-cancel">Cancel</button>`,
+  w=>{
+    w.querySelector("#sh-cancel").onclick = closeSheet;
+    w.querySelector("#sh-block").onclick = ()=>{
+      S.blocked.push(id);
+      S.friends = S.friends.filter(f=>f!==id);
+      delete S.unread[id]; save(); closeSheet();
+      if (onBlocked) onBlocked(); else render();
+      toast(`${p.name} has been blocked.`);
+    };
+    w.querySelector("#sh-report").onclick = ()=>openReportSheet(id);
+  });
+}
+function openReportSheet(id){
+  const p = person(id);
+  sheet(`
+    <h3>Report ${esc(p.name)}</h3>
+    <p class="s-sub">Tell us what happened. Our team reviews every report within 24 hours and removes content or people who break the rules.</p>
+    <select id="rp-reason">
+      <option value="">Choose a reason…</option>
+      <option>Harassment or bullying</option>
+      <option>Hate speech</option>
+      <option>Spam or scam</option>
+      <option>Inappropriate content</option>
+      <option>Pretending to be someone else</option>
+      <option>Something else</option>
+    </select>
+    <textarea id="rp-notes" rows="3" placeholder="Anything else we should know? (optional)"></textarea>
+    <button class="btn" id="rp-send" disabled>Submit report</button>
+    <button class="btn secondary" id="rp-cancel">Cancel</button>`,
+  w=>{
+    const sel=w.querySelector("#rp-reason"), btn=w.querySelector("#rp-send");
+    sel.onchange = ()=>{ btn.disabled = !sel.value; };
+    w.querySelector("#rp-cancel").onclick = closeSheet;
+    btn.onclick = ()=>{ closeSheet(); toast("Thanks — report received. We'll review it within 24 hours."); };
+  });
+}
+function sheet(html, wire){
+  closeSheet();
+  const w = document.createElement("div");
+  w.className = "sheet-wrap"; w.id = "sheet";
+  w.innerHTML = `<div class="sheet">${html}</div>`;
+  w.onclick = e=>{ if (e.target===w) closeSheet(); };
+  document.body.appendChild(w); wire(w);
+}
+function closeSheet(){ const s=$("#sheet"); if (s) s.remove(); }
+
+/* ---------- profile ---------- */
+function renderProfile(){
+  return `
+  <div class="screen">
+    <div class="topbar"><h1>Profile</h1></div>
+    <div class="prof">
+      <div class="card me-card">
+        <div class="ava">${S.me.avatar}</div>
+        <h3>${esc(S.me.name)}</h3>
+        <p>${esc(S.me.bio||"Add a line about you ✨")}</p>
+        <div class="tags" style="justify-content:center;margin-top:12px">${S.me.interests.map(i=>`<span class="tag match">${i}</span>`).join("")}</div>
+      </div>
+      <div class="section-label">Account</div>
+      <div class="card list">
+        ${row("✏️","#FFF0F4","Edit profile","edit")}
+        ${row("🔔","#FEF3E2",`Notifications · ${S.notif?"On":"Off"}`,"notif")}
+        ${row("🚫","#F3E8FF",`Blocked people · ${S.blocked.length}`,"blocked")}
+      </div>
+      <div class="section-label">Community &amp; legal</div>
+      <div class="card list">
+        ${rowLink("💛","#FFF0F4","Community Guidelines","guidelines.html")}
+        ${rowLink("🔒","#E8F7EE","Privacy Policy","privacy.html")}
+        ${rowLink("📄","#EEF2FF","Terms of Service","terms.html")}
+        ${rowLink("🛟","#FEF3E2","Help &amp; Support","support.html")}
+      </div>
+      <div class="section-label">Danger zone</div>
+      <div class="card list">
+        <button class="row red" data-act="delete"><span class="ic" style="background:#FFF1F2">🗑️</span><span class="grow">Delete my account &amp; data</span><span class="chev">›</span></button>
+      </div>
+      <p style="text-align:center;color:var(--dim);font-size:12.5px;padding:8px 0 4px">Friendy v1.0.0 · Made with 💛</p>
+    </div>
+  </div>`;
+}
+function row(ic,bg,label,act){ return `<button class="row" data-act="${act}"><span class="ic" style="background:${bg}">${ic}</span><span class="grow">${label}</span><span class="chev">›</span></button>`; }
+function rowLink(ic,bg,label,href){ return `<a class="row" style="text-decoration:none;color:inherit" href="${href}" target="_blank" rel="noopener"><span class="ic" style="background:${bg}">${ic}</span><span class="grow">${label}</span><span class="chev">›</span></a>`; }
+function wireProfile(){
+  document.querySelectorAll("[data-act]").forEach(b=>b.onclick=()=>{
+    const act=b.dataset.act;
+    if (act==="notif"){ S.notif=!S.notif; save(); render(); toast(S.notif?"Notifications on 🔔":"Notifications off 🔕"); }
+    if (act==="edit") openEditSheet();
+    if (act==="blocked") openBlockedSheet();
+    if (act==="delete") openDeleteSheet();
+  });
+}
+function openEditSheet(){
+  sheet(`
+    <h3>Edit profile</h3>
+    <div class="field"><label>Avatar</label><div class="avatar-row" id="ed-avs">${AVATARS.map(a=>`<button class="avatar-pick ${S.me.avatar===a?"on":""}" data-a="${a}">${a}</button>`).join("")}</div></div>
+    <div class="field"><label>Name</label><input id="ed-name" maxlength="20" value="${esc(S.me.name)}"/></div>
+    <div class="field"><label>About you</label><input id="ed-bio" maxlength="90" value="${esc(S.me.bio)}"/></div>
+    <button class="btn" id="ed-save">Save changes</button>
+    <button class="btn secondary" id="ed-cancel">Cancel</button>`,
+  w=>{
+    let av = S.me.avatar;
+    w.querySelectorAll(".avatar-pick").forEach(b=>b.onclick=()=>{
+      av=b.dataset.a;
+      w.querySelectorAll(".avatar-pick").forEach(x=>x.classList.toggle("on",x.dataset.a===av));
+    });
+    w.querySelector("#ed-cancel").onclick = closeSheet;
+    w.querySelector("#ed-save").onclick = ()=>{
+      const name=w.querySelector("#ed-name").value.trim();
+      if (!name){ toast("Name can't be empty"); return; }
+      S.me.name=name; S.me.bio=w.querySelector("#ed-bio").value.trim(); S.me.avatar=av;
+      save(); closeSheet(); render(); toast("Profile updated ✨");
+    };
+  });
+}
+function openBlockedSheet(){
+  const blocked = S.blocked.map(person).filter(Boolean);
+  sheet(`
+    <h3>Blocked people</h3>
+    <p class="s-sub">${blocked.length?"They can't see you or contact you. Unblock anytime.":"You haven't blocked anyone. 💛"}</p>
+    ${blocked.map(p=>`<button class="btn secondary" data-un="${p.id}">${p.avatar} Unblock ${esc(p.name)}</button>`).join("")}
+    <button class="btn" id="bl-close">Done</button>`,
+  w=>{
+    w.querySelector("#bl-close").onclick = closeSheet;
+    w.querySelectorAll("[data-un]").forEach(b=>b.onclick=()=>{
+      S.blocked = S.blocked.filter(x=>x!==b.dataset.un); save(); closeSheet(); render(); toast("Unblocked.");
+    });
+  });
+}
+function openDeleteSheet(){
+  sheet(`
+    <h3>Delete account &amp; data?</h3>
+    <p class="s-sub">This permanently erases your profile, friends, and every message stored on this device. This can't be undone.</p>
+    <button class="btn danger" id="del-yes">Yes, delete everything</button>
+    <button class="btn secondary" id="del-no">Keep my account</button>`,
+  w=>{
+    w.querySelector("#del-no").onclick = closeSheet;
+    w.querySelector("#del-yes").onclick = ()=>{
+      localStorage.removeItem(STORE_KEY);
+      S = load(); obStep=0; obDraft={agreed:false,age:false,name:"",avatar:"😀",bio:"",interests:[]};
+      closeSheet(); render(); toast("Your account and data were deleted.");
+    };
+  });
+}
+
+/* ---------- boot ---------- */
+render();
+if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(()=>{});
+</script>
+</body>
+</html>

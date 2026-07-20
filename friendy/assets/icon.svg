@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FFB03A"/>
+      <stop offset="0.55" stop-color="#FF5E7E"/>
+      <stop offset="1" stop-color="#A855F7"/>
+    </linearGradient>
+  </defs>
+  <rect width="1024" height="1024" fill="url(#bg)"/>
+  <!-- friend bubble peeking behind -->
+  <rect x="576" y="164" width="286" height="204" rx="102" fill="#FFFFFF" opacity="0.35"/>
+  <circle cx="664" cy="266" r="22" fill="#FFFFFF" opacity="0.55"/>
+  <circle cx="736" cy="266" r="22" fill="#FFFFFF" opacity="0.55"/>
+  <circle cx="808" cy="266" r="22" fill="#FFFFFF" opacity="0.55"/>
+  <!-- main smiling bubble -->
+  <rect x="196" y="286" width="600" height="470" rx="152" fill="#FFFFFF"/>
+  <path d="M312 716 L312 878 Q312 902 336 886 L474 756 Z" fill="#FFFFFF"/>
+  <circle cx="410" cy="472" r="37" fill="#FF4E75"/>
+  <circle cx="600" cy="472" r="37" fill="#FF4E75"/>
+  <path d="M388 578 Q505 676 622 578" fill="none" stroke="#FF4E75" stroke-width="48" stroke-linecap="round"/>
+</svg>

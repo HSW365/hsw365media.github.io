@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Friendy — Make Real Friends</title>
+<meta name="description" content="Friendy is a kind, safe place to meet friends who get you. Match on shared interests, chat, and make real friends. No follower counts. No weirdness."/>
+<meta property="og:title" content="Friendy — Make Real Friends"/>
+<meta property="og:description" content="A kind, safe place to meet friends who get you."/>
+<meta property="og:image" content="assets/icon-512.png"/>
+<link rel="icon" type="image/png" sizes="32x32" href="assets/icon-32.png"/>
+<link rel="apple-touch-icon" href="assets/icon-180.png"/>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+:root{
+  --grad:linear-gradient(135deg,#FFB03A 0%,#FF5E7E 55%,#A855F7 100%);
+  --pink:#FF5E7E;--pink-d:#E84A6B;--ink:#1F1235;--mid:#6B5E80;--dim:#A79DBB;
+  --bg:#FAF7FC;--line:#EFE9F6;
+}
+body{font-family:'Nunito','Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{text-decoration:none}
+nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:14px 28px;background:rgba(250,247,252,.88);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nv-logo{display:flex;align-items:center;gap:10px;font-weight:900;font-size:20px;color:var(--ink);letter-spacing:-.4px}
+.nv-logo img{width:34px;height:34px;border-radius:10px}
+.nv-links{display:flex;gap:22px;align-items:center}
+.nv-links a{color:var(--mid);font-weight:700;font-size:14.5px}
+.nv-links a:hover{color:var(--pink-d)}
+.nv-cta{background:var(--grad);color:#fff!important;font-weight:800;padding:10px 20px;border-radius:12px;box-shadow:0 6px 16px rgba(255,94,126,.3)}
+@media(max-width:680px){.nv-links a:not(.nv-cta){display:none}}
+
+.hero{padding:130px 24px 70px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:-40% -20% auto;height:130%;background:
+  radial-gradient(ellipse 45% 55% at 22% 30%,rgba(255,176,58,.16),transparent 65%),
+  radial-gradient(ellipse 45% 55% at 78% 25%,rgba(168,85,247,.14),transparent 65%),
+  radial-gradient(ellipse 50% 55% at 50% 60%,rgba(255,94,126,.12),transparent 65%);pointer-events:none}
+.hero>*{position:relative}
+.hero img.mark{width:104px;height:104px;border-radius:26px;box-shadow:0 16px 40px rgba(255,94,126,.35)}
+.hero h1{font-size:clamp(38px,7vw,62px);font-weight:900;letter-spacing:-1.5px;margin:22px 0 14px;line-height:1.08}
+.hero h1 .g{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p.sub{color:var(--mid);font-size:clamp(16px,2.6vw,19px);max-width:560px;margin:0 auto 30px;line-height:1.6;font-weight:600}
+.cta-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn-big{display:inline-flex;align-items:center;gap:9px;background:var(--grad);color:#fff;font-weight:800;font-size:17px;padding:16px 32px;border-radius:16px;box-shadow:0 10px 28px rgba(255,94,126,.38);transition:transform .15s}
+.btn-big:hover{transform:translateY(-2px)}
+.btn-soft{display:inline-flex;align-items:center;gap:9px;background:#fff;color:var(--ink);font-weight:800;font-size:17px;padding:16px 32px;border-radius:16px;border:2px solid var(--line)}
+.hero .fine{color:var(--dim);font-size:13.5px;font-weight:700;margin-top:16px}
+
+.phone-wrap{display:flex;justify-content:center;padding:10px 24px 30px}
+.phone{width:320px;background:#1F1235;border-radius:44px;padding:12px;box-shadow:0 30px 70px rgba(31,18,53,.3)}
+.phone .scr{background:var(--bg);border-radius:34px;overflow:hidden;font-size:13px}
+.scr .s-top{background:var(--grad);color:#fff;padding:20px 18px 16px;font-weight:900;font-size:17px}
+.scr .s-card{margin:12px 14px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px}
+.scr .s-head{display:flex;gap:10px;align-items:center;margin-bottom:8px}
+.scr .s-ava{width:40px;height:40px;border-radius:13px;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:21px}
+.scr b{font-size:14px}
+.scr .s-meta{color:var(--dim);font-size:11px;font-weight:700}
+.scr .s-bio{color:var(--mid);line-height:1.45;margin-bottom:9px}
+.scr .s-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px}
+.scr .s-tag{font-size:10px;font-weight:800;padding:4px 9px;border-radius:99px;background:var(--bg);color:var(--mid);border:1px solid var(--line)}
+.scr .s-tag.m{background:#FFF0F4;color:var(--pink-d);border-color:#FFD3DE}
+.scr .s-btns{display:flex;gap:7px}
+.scr .s-btn{flex:1;text-align:center;font-weight:800;font-size:12px;padding:9px 0;border-radius:11px}
+.scr .s-btn.a{background:var(--grad);color:#fff}
+.scr .s-btn.b{border:2px solid var(--line);color:var(--mid)}
+.scr .s-tabs{display:flex;border-top:1px solid var(--line);background:#fff;padding:9px 0 14px}
+.scr .s-tab{flex:1;text-align:center;font-size:10px;font-weight:800;color:var(--dim)}
+.scr .s-tab.on{color:var(--pink-d)}
+.scr .s-tab span{display:block;font-size:17px}
+
+section{padding:70px 24px;max-width:1020px;margin:0 auto}
+.sec-label{text-align:center;font-size:13px;font-weight:900;letter-spacing:.12em;text-transform:uppercase;color:var(--pink-d);margin-bottom:10px}
+h2.sec{font-size:clamp(28px,4.6vw,40px);font-weight:900;letter-spacing:-1px;text-align:center;margin-bottom:14px}
+p.sec-sub{text-align:center;color:var(--mid);font-size:17px;max-width:600px;margin:0 auto 44px;line-height:1.6;font-weight:600}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px}
+.feat{background:#fff;border:1px solid var(--line);border-radius:22px;padding:28px;box-shadow:0 4px 18px rgba(31,18,53,.04)}
+.feat .em{font-size:34px}
+.feat h3{font-size:18.5px;font-weight:900;margin:12px 0 8px}
+.feat p{color:var(--mid);font-size:15px;line-height:1.6}
+
+.safety{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.safety-inner{max-width:1020px;margin:0 auto;padding:70px 24px}
+.s-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:8px}
+.s-item{display:flex;gap:13px;align-items:flex-start;background:var(--bg);border:1px solid var(--line);border-radius:16px;padding:18px}
+.s-item .em{font-size:24px}
+.s-item b{display:block;font-size:15.5px;margin-bottom:3px}
+.s-item p{color:var(--mid);font-size:13.5px;line-height:1.5}
+
+.install{text-align:center}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;text-align:left;max-width:860px;margin:0 auto}
+.step{background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px}
+.step .n{width:32px;height:32px;border-radius:10px;background:var(--grad);color:#fff;font-weight:900;display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+.step p{color:var(--mid);font-size:14.5px;line-height:1.55}
+.step b{color:var(--ink)}
+
+.final{background:var(--grad);text-align:center;color:#fff;padding:80px 24px}
+.final h2{font-size:clamp(30px,5vw,44px);font-weight:900;letter-spacing:-1px;margin-bottom:12px}
+.final p{opacity:.95;font-size:17px;font-weight:600;margin-bottom:28px}
+.final .btn-big{background:#fff;color:var(--pink-d);box-shadow:0 12px 30px rgba(0,0,0,.18)}
+
+footer{padding:36px 24px;text-align:center}
+footer .f-links{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin-bottom:14px}
+footer a{color:var(--mid);font-weight:700;font-size:14px}
+footer a:hover{color:var(--pink-d)}
+footer .tiny{color:var(--dim);font-size:12.5px;font-weight:600}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nv-logo" href="index.html"><img src="assets/icon-180.png" alt=""/>Friendy</a>
+  <div class="nv-links">
+    <a href="#features">Features</a>
+    <a href="#safety">Safety</a>
+    <a href="support.html">Support</a>
+    <a class="nv-cta" href="app.html">Open Friendy</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <img class="mark" src="assets/icon-180.png" alt="Friendy app icon"/>
+  <h1>Make <span class="g">real friends</span>,<br/>the kind way.</h1>
+  <p class="sub">Friendy matches you with people who share your interests — then gets out of the way so real friendship can happen. No follower counts. No swiping games. No weirdness.</p>
+  <div class="cta-row">
+    <a class="btn-big" href="app.html">👋 Open Friendy — it's free</a>
+    <a class="btn-soft" href="#install">📲 Add to Home Screen</a>
+  </div>
+  <p class="fine">Works on iPhone, iPad, Android &amp; desktop · Installs like a native app · 13+</p>
+</div>
+
+<div class="phone-wrap">
+  <div class="phone"><div class="scr">
+    <div class="s-top">Discover</div>
+    <div class="s-card">
+      <div class="s-head"><div class="s-ava">🌸</div><div><b>Maya, 24</b><div class="s-meta">3 shared interests</div></div></div>
+      <div class="s-bio">New to the city and looking for museum buddies and coffee-shop co-workers.</div>
+      <div class="s-tags"><span class="s-tag m">🎨 Art</span><span class="s-tag m">📚 Books</span><span class="s-tag m">📷 Photo</span><span class="s-tag">🧘 Wellness</span></div>
+      <div class="s-btns"><span class="s-btn b">Skip</span><span class="s-btn a">➕ Add friend</span></div>
+    </div>
+    <div class="s-card">
+      <div class="s-head"><div class="s-ava">🏀</div><div><b>Jordan, 27</b><div class="s-meta">2 shared interests</div></div></div>
+      <div class="s-bio">Weekend baller, weekday coder. Always down for pickup games.</div>
+      <div class="s-tags"><span class="s-tag m">🏀 Hoops</span><span class="s-tag m">💻 Tech</span><span class="s-tag">🎮 Gaming</span></div>
+      <div class="s-btns"><span class="s-btn b">Skip</span><span class="s-btn a">➕ Add friend</span></div>
+    </div>
+    <div class="s-tabs">
+      <div class="s-tab on"><span>🧭</span>Discover</div>
+      <div class="s-tab"><span>💬</span>Chats</div>
+      <div class="s-tab"><span>🙂</span>Profile</div>
+    </div>
+  </div></div>
+</div>
+
+<section id="features">
+  <div class="sec-label">Why Friendy</div>
+  <h2 class="sec">Friendship, minus the awkward part</h2>
+  <p class="sec-sub">Everything in Friendy is designed to lower the pressure of meeting new people — and raise the odds you actually click.</p>
+  <div class="grid">
+    <div class="feat"><div class="em">🧭</div><h3>Match on what you love</h3><p>Pick your interests and Friendy highlights exactly what you have in common with each person — instant conversation starters.</p></div>
+    <div class="feat"><div class="em">💬</div><h3>Chat that feels easy</h3><p>Friendly, low-pressure messaging with the people you connect with. Say hi, make plans, be yourself.</p></div>
+    <div class="feat"><div class="em">🎨</div><h3>Your vibe, your profile</h3><p>Express yourself with a fun avatar, a one-liner bio, and your interests. No photos required, no follower counts, ever.</p></div>
+    <div class="feat"><div class="em">🔒</div><h3>Private by design</h3><p>Your data lives on your device — no server accounts, no ads, no trackers. Delete everything with one tap, anytime.</p></div>
+    <div class="feat"><div class="em">📴</div><h3>Works offline</h3><p>Friendy installs to your home screen and keeps working even without a connection.</p></div>
+    <div class="feat"><div class="em">💛</div><h3>Kindness is the rule</h3><p>Community guidelines with real teeth: abusive messages are filtered, and reports are handled within 24 hours.</p></div>
+  </div>
+</section>
+
+<div class="safety" id="safety">
+  <div class="safety-inner">
+    <div class="sec-label">Safety first</div>
+    <h2 class="sec">Built to keep the weirdness out</h2>
+    <p class="sec-sub">Every social feature in Friendy ships with a safety net. These aren't buried in a menu — they're one tap away, everywhere.</p>
+    <div class="s-grid">
+      <div class="s-item"><span class="em">🚫</span><div><b>Block instantly</b><p>One tap hides a person everywhere. They're never notified.</p></div></div>
+      <div class="s-item"><span class="em">🚩</span><div><b>Report anything</b><p>Reports reviewed within 24 hours; violators removed.</p></div></div>
+      <div class="s-item"><span class="em">🛡️</span><div><b>Message filtering</b><p>Abusive language is stopped before it's ever sent.</p></div></div>
+      <div class="s-item"><span class="em">🗑️</span><div><b>Delete everything</b><p>Erase your account and data in two taps. Gone means gone.</p></div></div>
+    </div>
+  </div>
+</div>
+
+<section id="install" class="install">
+  <div class="sec-label">Get the app</div>
+  <h2 class="sec">On your home screen in 20 seconds</h2>
+  <p class="sec-sub">Friendy is a modern web app — it installs straight from the browser, no store account needed.</p>
+  <div class="steps">
+    <div class="step"><div class="n">1</div><p><b>Open Friendy</b> in Safari on iPhone/iPad (or Chrome on Android).</p></div>
+    <div class="step"><div class="n">2</div><p>Tap <b>Share</b> <span style="font-size:15px">⎋</span> then <b>“Add to Home Screen.”</b></p></div>
+    <div class="step"><div class="n">3</div><p>Tap the new <b>Friendy icon</b> — it launches full-screen and works offline. 🎉</p></div>
+  </div>
+  <div style="margin-top:34px"><a class="btn-big" href="app.html">Open Friendy now</a></div>
+</section>
+
+<div class="final">
+  <h2>Your next good friend<br/>is already on Friendy.</h2>
+  <p>Free forever. Kind always.</p>
+  <a class="btn-big" href="app.html">👋 Start making friends</a>
+</div>
+
+<footer>
+  <div class="f-links">
+    <a href="app.html">Open app</a>
+    <a href="privacy.html">Privacy Policy</a>
+    <a href="terms.html">Terms of Service</a>
+    <a href="guidelines.html">Community Guidelines</a>
+    <a href="support.html">Support</a>
+  </div>
+  <p class="tiny">© 2026 Friendy · A QUEENEE.io product · Made with 💛</p>
+</footer>
+</body>
+</html>
