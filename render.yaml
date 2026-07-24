@@ -1,0 +1,37 @@
+# QUEENEE.io — Render Blueprint
+#
+# This repo is a pure static site (3 self-contained HTML files, no build step).
+# The correct Render service type is "static", NOT a Docker web service.
+# A static site is free, CDN-backed, and has no cold starts.
+#
+# A Dockerfile is also committed at the repo root so that any EXISTING
+# Docker-runtime web service pointed at this repo will build successfully
+# instead of erroring with "failed to read dockerfile".
+
+services:
+  - type: web
+    name: queenee-site
+    runtime: static
+    staticPublishPath: .
+    pullRequestPreviewsEnabled: false
+    buildFilter:
+      paths:
+        - "*.html"
+    routes:
+      # Clean URLs
+      - type: rewrite
+        source: /signup
+        destination: /signup.html
+      - type: rewrite
+        source: /ai-receptionist
+        destination: /ai-receptionist.html
+    headers:
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: X-Frame-Options
+        value: SAMEORIGIN
+      - path: /*.html
+        name: Cache-Control
+        value: no-cache, must-revalidate
