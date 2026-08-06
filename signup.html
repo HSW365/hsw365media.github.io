@@ -114,6 +114,26 @@ main{min-height:calc(100vh - 58px - 73px);padding:48px 40px;display:flex;flex-di
 .demo-loading p{font-size:13px;color:var(--md)}
 .demo-loading .demo-status{font-size:11px;color:var(--dm);font-family:'Barlow',sans-serif}
 #demoFrame{width:100%;min-height:480px;border:none;display:none}
+/* DEMO CONTROLS (build-it-out) */
+.demo-controls{background:var(--s2);border:1px solid var(--b1);border-radius:10px;padding:14px 16px;margin-bottom:16px}
+.dc-top{font-size:12px;font-weight:700;color:var(--pul);letter-spacing:0.02em;margin-bottom:14px}
+.dc-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.dc-row:last-child{margin-bottom:0}
+.dc-label{font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--md);min-width:66px}
+.dc-label-inline{min-width:auto;margin-left:6px}
+.dc-swatches{display:flex;gap:8px}
+.dc-sw{width:26px;height:26px;border-radius:6px;cursor:pointer;border:2px solid transparent;padding:0;transition:transform .12s,border-color .12s}
+.dc-sw:hover{transform:scale(1.12)}
+.dc-sw.active{border-color:var(--wh)}
+.dc-seg{display:flex;background:var(--s1);border:1px solid var(--b1);border-radius:7px;padding:3px;gap:3px}
+.dc-seg button{background:transparent;border:none;color:var(--md);font-size:12px;font-weight:700;padding:6px 14px;border-radius:5px;cursor:pointer;font-family:'Barlow',sans-serif;letter-spacing:.02em}
+.dc-seg button.active{background:var(--pu);color:#fff}
+.dc-switch{position:relative;width:44px;height:24px;background:var(--b2);border-radius:20px;cursor:pointer;transition:background .2s;border:none;flex-shrink:0}
+.dc-switch.on{background:var(--gr)}
+.dc-switch span{position:absolute;top:3px;left:3px;width:18px;height:18px;background:#fff;border-radius:50%;transition:left .2s}
+.dc-switch.on span{left:23px}
+.dc-input{flex:1;min-width:180px;background:var(--s1);border:1px solid var(--b1);border-radius:6px;padding:9px 12px;color:var(--wh);font-family:'Barlow',sans-serif;font-size:14px;outline:none}
+.dc-input:focus{border-color:var(--pul)}
 
 /* SUMMARY */
 .summary-box{background:var(--s2);border:1px solid var(--b1);border-radius:8px;padding:24px;margin-bottom:24px}
@@ -354,7 +374,28 @@ main{min-height:calc(100vh - 58px - 73px);padding:48px 40px;display:flex;flex-di
 <div class="page" id="page3">
   <div class="page-eyebrow">Step 3 of 5</div>
   <h1 class="page-h">Your Demo<br>Website</h1>
-  <p class="page-sub">Here is a preview of what your business website will look like. This is generated specifically for your business.</p>
+  <p class="page-sub">Here’s your site, built from what you told us. Now make it yours — switch the colors, pick a style, edit the headline, and watch your QUEENEE AI Front Desk answer a customer live.</p>
+
+  <div class="demo-controls" id="demoControls" style="display:none">
+    <div class="dc-top">Make it yours — tap to customize</div>
+    <div class="dc-row">
+      <span class="dc-label">Color</span>
+      <div class="dc-swatches" id="dcSwatches"></div>
+    </div>
+    <div class="dc-row">
+      <span class="dc-label">Style</span>
+      <div class="dc-seg" id="dcVibe">
+        <button data-v="bold" class="active" onclick="setVibe('bold')">Bold</button>
+        <button data-v="clean" onclick="setVibe('clean')">Clean</button>
+      </div>
+      <span class="dc-label dc-label-inline">AI Front Desk</span>
+      <button class="dc-switch on" id="dcAi" onclick="toggleAi()" aria-label="Toggle AI Front Desk"><span></span></button>
+    </div>
+    <div class="dc-row">
+      <span class="dc-label">Headline</span>
+      <input class="dc-input" id="dcHeadline" oninput="setHeadline(this.value)" maxlength="60" placeholder="Your headline"/>
+    </div>
+  </div>
 
   <div class="demo-wrap">
     <div class="demo-browser-bar">
@@ -533,54 +574,200 @@ function goToStep3(){
 }
 
 var demoStatuses=[
-  'Analyzing your business details...',
-  'Designing your layout...',
-  'Building your homepage...',
-  'Adding your services section...',
-  'Setting up contact forms...',
-  'Finalizing your demo...'
+  'Analyzing your business...',
+  'Choosing your color palette...',
+  'Writing your homepage copy...',
+  'Building your services section...',
+  'Activating your AI Front Desk...',
+  'Finalizing your preview...'
 ];
 
-async function generateDemo(){
-  var frame=document.getElementById('demoFrame');
-  var loading=document.getElementById('demoLoading');
-  var urlBar=document.getElementById('demoUrl');
-  frame.style.display='none';
-  loading.style.display='flex';
+var INDUSTRY={
+  'Restaurant / Food':{accent:'#FF6B35',base:'#17100B',head:'Fresh Flavors, Made Daily',sub:'[BIZ] serves [LOC] the meals worth driving across town for. Order online, reserve a table, or just stop in.',cta:'View Menu',services:[{h:'Dine-In & Takeout',p:'A full menu ready for a seat at the table or a quick pickup.'},{h:'Online Ordering',p:'Customers order in seconds from any phone - no app, no waiting on hold.'},{h:'Catering & Events',p:'From office lunches to parties, we cook so you can celebrate.'}],ai:'Thanks for reaching [BIZ]! Want to place an order or book a table?'},
+  'Auto Shop / Mechanic':{accent:'#3B82F6',base:'#0B1017',head:'Honest Repairs, Done Right',sub:'[LOC]\u2019s trusted shop for repairs, maintenance, and diagnostics - no surprises, no upselling.',cta:'Book a Service',services:[{h:'Full-Service Repair',p:'Brakes, engines, transmissions - handled by certified techs.'},{h:'Routine Maintenance',p:'Oil changes, inspections, and tune-ups to keep you on the road.'},{h:'Free Diagnostics',p:'We find the problem and quote it before we touch a thing.'}],ai:'Thanks for calling [BIZ]! Need a quote or want to schedule a drop-off?'},
+  'Salon / Spa / Beauty':{accent:'#EC4899',base:'#170B12',head:'Look Good, Feel Amazing',sub:'Book your next cut, color, or treatment at [BIZ] - [LOC]\u2019s go-to for looking and feeling your best.',cta:'Book Appointment',services:[{h:'Hair & Color',p:'Cuts, styles, and color from stylists who actually listen.'},{h:'Spa & Skincare',p:'Facials, treatments, and a little time just for you.'},{h:'Nails & More',p:'Manicures, pedicures, and finishing touches that last.'}],ai:'Hi! Thanks for reaching [BIZ]. Would you like to book an appointment?'},
+  'Contractor / Construction':{accent:'#F59E0B',base:'#17130B',head:'Built Right, Built to Last',sub:'[BIZ] delivers quality work on time and on budget across [LOC] - licensed, insured, and reliable.',cta:'Get a Free Estimate',services:[{h:'Remodels & Renovations',p:'Kitchens, baths, and additions done to the last detail.'},{h:'New Construction',p:'From foundation to finish, built to code and to last.'},{h:'Repairs & Maintenance',p:'Fast, clean fixes that hold up for the long haul.'}],ai:'Thanks for reaching [BIZ]! Want a free estimate on your project?'},
+  'Real Estate':{accent:'#10B981',base:'#0B1712',head:'Your Next Move Starts Here',sub:'Buying or selling in [LOC]? [BIZ] gets you the right deal with none of the guesswork.',cta:'See Listings',services:[{h:'Buy a Home',p:'Find the right place with an agent who knows the area.'},{h:'Sell for More',p:'Pricing, staging, and marketing that move properties fast.'},{h:'Free Market Report',p:'Know exactly what your home is worth in today\u2019s market.'}],ai:'Hi! Thanks for reaching [BIZ]. Looking to buy, sell, or just browsing?'},
+  'Medical / Dental':{accent:'#06B6D4',base:'#0B1517',head:'Care You Can Trust',sub:'[BIZ] provides friendly, modern care for [LOC] families. New patients are always welcome.',cta:'Request Appointment',services:[{h:'New Patient Visits',p:'Comprehensive exams and a care plan built around you.'},{h:'Preventive Care',p:'Cleanings, checkups, and early detection that keeps you healthy.'},{h:'Same-Day Availability',p:'Hurting today? We\u2019ll do our best to see you today.'}],ai:'Thank you for contacting [BIZ]! Would you like to request an appointment?'},
+  'Law Firm / Legal':{accent:'#8B5CF6',base:'#0F0B17',head:'On Your Side, In Your Corner',sub:'[BIZ] fights for [LOC] clients with straight talk and real results. Free consultations available.',cta:'Free Consultation',services:[{h:'Case Evaluation',p:'Tell us what happened - we\u2019ll tell you exactly where you stand.'},{h:'Trusted Representation',p:'Experienced counsel who prepares every case to win.'},{h:'Clear, Honest Pricing',p:'No surprise bills - you\u2019ll always know where you stand.'}],ai:'Thanks for reaching [BIZ]. Would you like to schedule a free consultation?'},
+  'Retail Store':{accent:'#F43F5E',base:'#170B0F',head:'Shop Local, Shop [BIZ]',sub:'Discover what [LOC] loves at [BIZ] - quality goods, fair prices, and a team that treats you right.',cta:'Shop Now',services:[{h:'In-Store & Online',p:'Browse in person or shop the full collection online.'},{h:'New Arrivals Weekly',p:'Fresh stock and seasonal picks you won\u2019t find at the big box.'},{h:'Easy Returns',p:'Not right? Bring it back - no hassle, no attitude.'}],ai:'Hi! Thanks for visiting [BIZ]. Looking for something specific?'},
+  'Fitness / Gym':{accent:'#84CC16',base:'#101707',head:'Stronger Starts Today',sub:'Join [BIZ] and train with people who push you. Your first session is on us - [LOC].',cta:'Start Free Trial',services:[{h:'Personal Training',p:'1-on-1 coaching built around your goals and your schedule.'},{h:'Group Classes',p:'High-energy classes that make showing up the easy part.'},{h:'Open Gym Access',p:'Top equipment, clean space, open when you are.'}],ai:'Hey! Thanks for reaching [BIZ]. Want to claim your free first session?'},
+  'Consulting / Coaching':{accent:'#6366F1',base:'#0C0B17',head:'Results, Not Just Advice',sub:'[BIZ] helps [LOC] businesses and leaders get unstuck and grow - with a plan that actually gets done.',cta:'Book a Strategy Call',services:[{h:'Strategy & Planning',p:'A clear roadmap from where you are to where you want to be.'},{h:'Hands-On Coaching',p:'Ongoing support that keeps you accountable and moving.'},{h:'Free Discovery Call',p:'30 minutes to see if we\u2019re the right fit - no pressure.'}],ai:'Thanks for reaching [BIZ]! Want to book a free strategy call?'},
+  'Non-Profit':{accent:'#14B8A6',base:'#0B1615',head:'Together, We Do More',sub:'[BIZ] serves [LOC] with programs that change lives. Donate, volunteer, or partner with us today.',cta:'Donate Now',services:[{h:'Our Programs',p:'Real services making a real difference in the community.'},{h:'Volunteer',p:'Give your time - every hour moves the mission forward.'},{h:'Donate',p:'Every dollar goes straight to work right here at home.'}],ai:'Thank you for reaching [BIZ]! Would you like to donate or volunteer?'},
+  '__default__':{accent:'#7C3AED',base:'#0D0B14',head:'Welcome to [BIZ]',sub:'Proudly serving [LOC] with quality, care, and service you can count on. Get in touch today.',cta:'Get Started',services:[{h:'What We Do',p:'Quality service delivered by a team that cares about the details.'},{h:'Why Choose Us',p:'Local, reliable, and dedicated to doing right by our customers.'},{h:'Get in Touch',p:'Questions? Reach out - we\u2019re here and happy to help.'}],ai:'Hi! Thanks for reaching [BIZ]. How can we help you today?'}
+};
 
-  var slug=biz.name.toLowerCase().replace(/[^a-z0-9]/g,'')||'yourbusiness';
-  urlBar.textContent=slug+'.com';
+var demoCfg={accent:'#7C3AED',base:'#0D0B14',vibe:'bold',ai:true,headline:'',sub:'',cta:'Get Started',services:[],ai_greet:''};
+var PALETTE=['#7C3AED','#3B82F6','#EC4899','#F59E0B','#10B981','#06B6D4','#F43F5E','#84CC16'];
 
-  var statusEl=document.getElementById('demoStatus');
-  var si=0;
-  var statusInterval=setInterval(function(){
-    if(si<demoStatuses.length){statusEl.textContent=demoStatuses[si];si++}
-  },500);
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function fillTpl(s){return String(s||'').replace(/\[BIZ\]/g,biz.name||'Your Business').replace(/\[LOC\]/g,biz.location||'your area');}
+function industryPack(){return INDUSTRY[biz.industry]||INDUSTRY['__default__'];}
 
-  // Generate the demo using business-specific templating.
-  // Runs locally in-browser so it is instant and never fails, regardless of network conditions.
-  await new Promise(function(resolve){setTimeout(resolve,2800)}); // brief realistic build animation
-  clearInterval(statusInterval);
-
-  var html=buildFallbackDemo();
-  frame.srcdoc=html;
-  frame.style.display='block';
-  loading.style.display='none';
+function goalChips(){
+  var raw=(biz.goals||'').split(/,|;|\band\b|&|\n|\./i);var out=[];
+  for(var i=0;i<raw.length;i++){
+    var t=raw[i].trim().replace(/^(to|get|i want|we want|let|show|our|so we can|be able to)\s+/i,'').trim();
+    if(t.length>3&&t.length<44&&out.length<3){out.push(t.charAt(0).toUpperCase()+t.slice(1));}
+  }
+  return out;
 }
 
-function buildFallbackDemo(){
-  var colors={
-    'Restaurant / Food':['#1A0800','#FF6B00'],
-    'Auto Shop / Mechanic':['#0D0D1A','#3B82F6'],
-    'Salon / Spa / Beauty':['#0D1A14','#EC4899'],
-    'Contractor / Construction':['#0D1421','#F59E0B'],
-    'Real Estate':['#001A1A','#10B981'],
-    'Medical / Dental':['#001018','#06B6D4'],
-    'Law Firm / Legal':['#0A0A14','#8B5CF6'],
-    'default':['#0A0A0F','#7C3AED']
-  };
-  var c=colors[biz.industry]||colors['default'];
-  return '<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet"><style>*{box-sizing:border-box;margin:0;padding:0}body{background:'+c[0]+';color:#F0F0F8;font-family:Barlow,sans-serif}nav{background:rgba(0,0,0,0.5);padding:16px 40px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,0.08)}.nav-logo{font-family:"Barlow Condensed",sans-serif;font-size:20px;font-weight:900;text-transform:uppercase;letter-spacing:1px}.nav-btn{background:'+c[1]+';color:#fff;padding:8px 20px;border-radius:4px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;cursor:pointer;border:none}.hero{padding:80px 40px;text-align:center;background:linear-gradient(135deg,'+c[0]+',#1A1030)}.hero h1{font-family:"Barlow Condensed",sans-serif;font-size:56px;font-weight:900;text-transform:uppercase;line-height:0.92;margin-bottom:20px}.hero h1 span{color:'+c[1]+'}.hero p{font-size:16px;color:rgba(240,240,248,0.65);max-width:500px;margin:0 auto 32px;line-height:1.7}.hero-btn{background:'+c[1]+';color:#fff;padding:14px 36px;border-radius:4px;font-size:14px;font-weight:700;border:none;cursor:pointer;text-transform:uppercase;letter-spacing:1px;margin-right:12px}.hero-btn2{background:transparent;border:1px solid rgba(255,255,255,0.2);color:#fff;padding:14px 36px;border-radius:4px;font-size:14px;font-weight:600;cursor:pointer}.services{padding:60px 40px;background:rgba(0,0,0,0.3)}.services h2{font-family:"Barlow Condensed",sans-serif;font-size:36px;font-weight:900;text-transform:uppercase;text-align:center;margin-bottom:8px}.services p.sub{color:rgba(240,240,248,0.5);text-align:center;margin-bottom:36px;font-size:14px}.svc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.svc-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:8px;padding:24px;border-top:3px solid '+c[1]+'}.svc-card h3{font-size:16px;font-weight:700;margin-bottom:8px}.svc-card p{font-size:13px;color:rgba(240,240,248,0.5);line-height:1.6}.contact{padding:60px 40px;background:linear-gradient(135deg,rgba(0,0,0,0.5),rgba(0,0,0,0.3))}.contact h2{font-family:"Barlow Condensed",sans-serif;font-size:36px;font-weight:900;text-transform:uppercase;text-align:center;margin-bottom:32px}.contact-form{max-width:500px;margin:0 auto;display:flex;flex-direction:column;gap:14px}.contact-form input,.contact-form textarea{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:4px;padding:12px 16px;color:#F0F0F8;font-family:Barlow,sans-serif;font-size:14px;outline:none}.contact-form textarea{height:100px;resize:vertical}.contact-form button{background:'+c[1]+';color:#fff;padding:13px;border-radius:4px;font-size:14px;font-weight:700;border:none;cursor:pointer;text-transform:uppercase;letter-spacing:1px}footer{background:rgba(0,0,0,0.6);padding:24px 40px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(255,255,255,0.07)}.footer-logo{font-family:"Barlow Condensed",sans-serif;font-size:16px;font-weight:900;text-transform:uppercase;letter-spacing:1px}.footer-copy{font-size:11px;color:rgba(240,240,248,0.3)}</style></head><body><nav><div class="nav-logo">'+biz.name+'</div><div style="display:flex;gap:16px;align-items:center"><span style="font-size:12px;color:rgba(240,240,248,0.5)">Services</span><span style="font-size:12px;color:rgba(240,240,248,0.5)">About</span><span style="font-size:12px;color:rgba(240,240,248,0.5)">Contact</span><button class="nav-btn">Book Now</button></div></nav><div class="hero"><h1>'+biz.name.toUpperCase().split(' ').join('<br>')+'<br><span>'+biz.industry.split('/')[0].trim()+'</span></h1><p>Professional '+biz.industry+' services in '+(biz.location||'your area')+'. Trusted by hundreds of local customers. Get in touch today for a free consultation.</p><button class="hero-btn">Get a Free Quote</button><button class="hero-btn2">Our Services</button></div><div class="services"><h2>What We Offer</h2><p class="sub">Everything you need from a trusted local '+biz.industry+' provider</p><div class="svc-grid"><div class="svc-card"><h3>Quality Service</h3><p>We deliver top-quality results every time. Our team is trained, certified, and dedicated to excellence.</p></div><div class="svc-card"><h3>Fast Turnaround</h3><p>We respect your time. Most jobs are completed on schedule with no surprises or delays.</p></div><div class="svc-card"><h3>Local &amp; Trusted</h3><p>Based right here in '+(biz.location||'your area')+', we are invested in our community and our customers.</p></div></div></div><div class="contact"><h2>Contact Us</h2><div class="contact-form"><input type="text" placeholder="Your Name"><input type="email" placeholder="Email Address"><input type="tel" placeholder="Phone Number"><textarea placeholder="Tell us about your project or question..."></textarea><button>Send Message</button></div></div><footer><div class="footer-logo">'+biz.name+'</div><div class="footer-copy">&copy; 2025 '+biz.name+'. All rights reserved.</div></footer></body></html>';
+var _demoTimer=null;
+function generateDemo(){
+  var frame=document.getElementById('demoFrame');
+  var loading=document.getElementById('demoLoading');
+  var controls=document.getElementById('demoControls');
+  var urlBar=document.getElementById('demoUrl');
+  frame.style.display='none';loading.style.display='flex';controls.style.display='none';
+  var slug=(biz.name||'yourbusiness').toLowerCase().replace(/[^a-z0-9]/g,'')||'yourbusiness';
+  urlBar.textContent=slug+'.com';
+  var statusEl=document.getElementById('demoStatus');var si=0;
+  var iv=setInterval(function(){if(si<demoStatuses.length){statusEl.textContent=demoStatuses[si];si++;}},420);
+
+  var p=industryPack();
+  demoCfg.accent=p.accent;demoCfg.base=p.base;demoCfg.vibe='bold';demoCfg.ai=true;
+  demoCfg.headline=fillTpl(p.head);demoCfg.sub=fillTpl(p.sub);demoCfg.cta=p.cta;
+  demoCfg.services=p.services;demoCfg.ai_greet=fillTpl(p.ai);
+
+  buildSwatches();
+  var hl=document.getElementById('dcHeadline');if(hl)hl.value=demoCfg.headline;
+  var aiSw=document.getElementById('dcAi');if(aiSw)aiSw.classList.add('on');
+  document.querySelectorAll('#dcVibe button').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-v')==='bold');});
+
+  clearTimeout(_demoTimer);
+  _demoTimer=setTimeout(function(){
+    clearInterval(iv);
+    renderDemo();
+    loading.style.display='none';
+    frame.style.display='block';
+    controls.style.display='block';
+  },2500);
+}
+
+function buildSwatches(){
+  var wrap=document.getElementById('dcSwatches');if(!wrap)return;
+  var list=[demoCfg.accent];
+  for(var i=0;i<PALETTE.length;i++){if(list.indexOf(PALETTE[i])<0)list.push(PALETTE[i]);}
+  list=list.slice(0,6);wrap.innerHTML='';
+  list.forEach(function(col){
+    var b=document.createElement('button');
+    b.className='dc-sw'+(col===demoCfg.accent?' active':'');
+    b.style.background=col;b.setAttribute('data-c',col);
+    b.onclick=function(){pickColor(col);};
+    wrap.appendChild(b);
+  });
+}
+function pickColor(col){demoCfg.accent=col;document.querySelectorAll('#dcSwatches .dc-sw').forEach(function(s){s.classList.toggle('active',s.getAttribute('data-c')===col);});renderDemo();}
+function setVibe(v){demoCfg.vibe=v;document.querySelectorAll('#dcVibe button').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-v')===v);});renderDemo();}
+function toggleAi(){demoCfg.ai=!demoCfg.ai;document.getElementById('dcAi').classList.toggle('on',demoCfg.ai);renderDemo();}
+var _hlT=null;
+function setHeadline(v){demoCfg.headline=v;clearTimeout(_hlT);_hlT=setTimeout(renderDemo,180);}
+
+function renderDemo(){
+  var frame=document.getElementById('demoFrame');if(!frame)return;
+  var a=demoCfg.accent,base=demoCfg.base,bold=demoCfg.vibe==='bold';
+  var name=esc(biz.name||'Your Business');
+  var loc=esc(biz.location||'your area');
+  var rawPhone=(biz.phone||'').replace(/[^0-9+]/g,'');
+  var phoneDisp=esc(biz.phone||'');
+  var head=esc(demoCfg.headline||'Welcome');
+  var sub=esc(demoCfg.sub||'');
+  var cta=esc(demoCfg.cta||'Get Started');
+  var chips=goalChips();
+  var chipsHtml=chips.length?('<div class="chips">'+chips.map(function(c){return '<span>'+esc(c)+'</span>';}).join('')+'</div>'):'';
+  var svc=demoCfg.services.map(function(s){return '<div class="svc"><div class="svc-ic"></div><h3>'+esc(s.h)+'</h3><p>'+esc(s.p)+'</p></div>';}).join('');
+  var callBtn=rawPhone?('<a class="btn2" href="tel:'+esc(rawPhone)+'">Call '+phoneDisp+'</a>'):'<a class="btn2" href="#">Get a Quote</a>';
+  var contactLine=(rawPhone?('<div class="ci"><span>Call</span>'+phoneDisp+'</div>'):'')+'<div class="ci"><span>Area</span>'+loc+'</div><div class="ci"><span>Hours</span>Mon - Sat</div>';
+
+  var heroBg=bold
+    ?('radial-gradient(120% 90% at 82% 0%,'+a+'2b 0%,transparent 55%),linear-gradient(165deg,'+base+' 0%,#050509 100%)')
+    :('radial-gradient(90% 70% at 92% 8%,'+a+'18 0%,transparent 60%),'+base);
+  var h1css=bold
+    ?'font-family:"Barlow Condensed",sans-serif;text-transform:uppercase;font-weight:900;letter-spacing:-0.5px;'
+    :'font-family:"Barlow Condensed",sans-serif;text-transform:none;font-weight:800;letter-spacing:-0.5px;';
+  var svcBorder=bold?('border-top:3px solid '+a):('border-left:3px solid '+a);
+  var svcBg=bold?'rgba(255,255,255,0.03)':'rgba(255,255,255,0.05)';
+
+  var aiWidget='';
+  if(demoCfg.ai){
+    aiWidget=''
+    +'<div id="qbubble"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 4h16v11H8l-4 4V4z" fill="#fff"/></svg></div>'
+    +'<div id="qcard">'
+      +'<div id="qhead"><div class="qdot"></div><div><div class="qname">'+name+'</div><div class="qstat">AI Front Desk - online</div></div></div>'
+      +'<div id="qmsgs"><div class="qm them">'+esc(demoCfg.ai_greet)+'</div></div>'
+      +'<div id="qtyping"><span></span><span></span><span></span></div>'
+      +'<div id="qfoot">Powered by <b>QUEENEE AI</b></div>'
+    +'</div>'
+    +'<script>(function(){var open=false;var card=document.getElementById("qcard");var bub=document.getElementById("qbubble");var msgs=document.getElementById("qmsgs");var typ=document.getElementById("qtyping");function show(){card.style.display="flex";bub.style.display="none";}bub.addEventListener("click",show);setTimeout(show,1400);function add(who,txt){var d=document.createElement("div");d.className="qm "+who;d.textContent=txt;msgs.insertBefore(d,typ.parentNode===msgs?typ:null);msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;}setTimeout(function(){add("me","Hi, are you taking new customers?");},3000);setTimeout(function(){typ.style.display="block";},4100);setTimeout(function(){typ.style.display="none";add("them","We are! I can set you up right now - what\u2019s the best number to reach you?");},5600);})();<\/script>';
+  }
+
+  var html='<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">'
+  +'<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">'
+  +'<style>'
+  +'*{box-sizing:border-box;margin:0;padding:0}'
+  +'body{background:'+base+';color:#EDEDF5;font-family:Barlow,sans-serif;-webkit-font-smoothing:antialiased}'
+  +'a{text-decoration:none;color:inherit}'
+  +'nav{position:sticky;top:0;z-index:50;background:rgba(0,0,0,0.55);backdrop-filter:blur(14px);padding:14px 26px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,0.07)}'
+  +'.nlogo{font-family:"Barlow Condensed",sans-serif;font-size:19px;font-weight:900;text-transform:uppercase;letter-spacing:1px;display:flex;align-items:center;gap:9px}'
+  +'.nlogo i{width:11px;height:11px;border-radius:3px;background:'+a+';display:inline-block}'
+  +'.nlinks{display:flex;gap:20px;align-items:center}.nlinks span{font-size:12px;color:rgba(237,237,245,0.6);font-weight:500}'
+  +'.nbtn{background:'+a+';color:#fff;padding:9px 18px;border-radius:5px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px}'
+  +'.hero{padding:64px 26px 56px;background:'+heroBg+';position:relative}'
+  +'.eyebrow{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:'+a+';margin-bottom:16px}'
+  +'.hero h1{'+h1css+'font-size:clamp(34px,7vw,60px);line-height:0.96;max-width:680px;margin-bottom:18px}'
+  +'.hero .sub{font-size:16px;line-height:1.65;color:rgba(237,237,245,0.72);max-width:520px;margin-bottom:22px}'
+  +'.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:26px}'
+  +'.chips span{font-size:12px;font-weight:600;color:#EDEDF5;background:rgba(255,255,255,0.06);border:1px solid '+a+'55;padding:6px 12px;border-radius:20px}'
+  +'.cta-row{display:flex;flex-wrap:wrap;gap:12px}'
+  +'.btn1{background:'+a+';color:#fff;padding:14px 30px;border-radius:6px;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px}'
+  +'.btn2{background:transparent;border:1px solid rgba(255,255,255,0.22);color:#fff;padding:14px 26px;border-radius:6px;font-size:14px;font-weight:600}'
+  +'.trust{display:flex;gap:8px;flex-wrap:wrap;padding:16px 26px;background:rgba(0,0,0,0.35);border-top:1px solid rgba(255,255,255,0.06);border-bottom:1px solid rgba(255,255,255,0.06);font-size:12px;color:rgba(237,237,245,0.6);font-weight:600}'
+  +'.trust b{color:'+a+'}'
+  +'.sec{padding:52px 26px}.sec h2{font-family:"Barlow Condensed",sans-serif;font-size:30px;font-weight:900;text-transform:uppercase;margin-bottom:6px}'
+  +'.sec .ssub{font-size:14px;color:rgba(237,237,245,0.5);margin-bottom:28px}'
+  +'.svc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px}'
+  +'.svc{background:'+svcBg+';border:1px solid rgba(255,255,255,0.07);'+svcBorder+';border-radius:9px;padding:22px}'
+  +'.svc-ic{width:34px;height:34px;border-radius:8px;background:'+a+'22;border:1px solid '+a+'55;margin-bottom:14px}'
+  +'.svc h3{font-size:16px;font-weight:700;margin-bottom:7px}.svc p{font-size:13px;color:rgba(237,237,245,0.55);line-height:1.6}'
+  +'.contact{padding:52px 26px;background:rgba(0,0,0,0.3)}'
+  +'.cwrap{display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start}'
+  +'.ci{padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:15px;font-weight:600}'
+  +'.ci span{display:block;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:'+a+';font-weight:700;margin-bottom:3px}'
+  +'.cform{display:flex;flex-direction:column;gap:11px}'
+  +'.cform input,.cform textarea{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:12px 14px;color:#EDEDF5;font-family:Barlow,sans-serif;font-size:14px;outline:none}'
+  +'.cform textarea{height:88px;resize:none}'
+  +'.cform button{background:'+a+';color:#fff;padding:13px;border-radius:6px;font-weight:700;border:none;font-size:14px;text-transform:uppercase;letter-spacing:0.6px;cursor:pointer}'
+  +'footer{padding:22px 26px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(255,255,255,0.07);flex-wrap:wrap;gap:10px}'
+  +'.flogo{font-family:"Barlow Condensed",sans-serif;font-size:15px;font-weight:900;text-transform:uppercase;letter-spacing:1px}'
+  +'.fcopy{font-size:11px;color:rgba(237,237,245,0.35)}'
+  +'#qbubble{position:fixed;right:16px;bottom:16px;width:52px;height:52px;border-radius:50%;background:'+a+';display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 8px 30px rgba(0,0,0,0.5);z-index:100}'
+  +'#qcard{display:none;position:fixed;right:16px;bottom:16px;width:min(300px,86vw);height:380px;background:#0c0c14;border:1px solid rgba(255,255,255,0.1);border-radius:14px;flex-direction:column;overflow:hidden;z-index:101;box-shadow:0 12px 44px rgba(0,0,0,0.6)}'
+  +'#qhead{background:'+a+';padding:13px 15px;display:flex;align-items:center;gap:10px;color:#fff}'
+  +'#qhead .qdot{width:9px;height:9px;border-radius:50%;background:#3DF08A;box-shadow:0 0 0 3px rgba(255,255,255,0.25)}'
+  +'.qname{font-size:14px;font-weight:800;font-family:"Barlow Condensed",sans-serif;text-transform:uppercase;letter-spacing:0.5px}'
+  +'.qstat{font-size:10px;opacity:0.85}'
+  +'#qmsgs{flex:1;padding:14px;display:flex;flex-direction:column;gap:9px;overflow-y:auto}'
+  +'.qm{max-width:82%;padding:9px 12px;border-radius:12px;font-size:13px;line-height:1.45}'
+  +'.qm.them{background:rgba(255,255,255,0.07);color:#EDEDF5;align-self:flex-start;border-bottom-left-radius:3px}'
+  +'.qm.me{background:'+a+';color:#fff;align-self:flex-end;border-bottom-right-radius:3px}'
+  +'#qtyping{display:none;padding:0 14px 8px;gap:4px}'
+  +'#qtyping span{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.4);display:inline-block;animation:qb 1s infinite}'
+  +'#qtyping span:nth-child(2){animation-delay:0.15s}#qtyping span:nth-child(3){animation-delay:0.3s}'
+  +'@keyframes qb{0%,60%,100%{opacity:0.3}30%{opacity:1}}'
+  +'#qfoot{padding:9px;text-align:center;font-size:10px;color:rgba(237,237,245,0.4);border-top:1px solid rgba(255,255,255,0.07)}#qfoot b{color:'+a+'}'
+  +'@media(max-width:560px){.cwrap{grid-template-columns:1fr}}'
+  +'</style></head><body>'
+  +'<nav><div class="nlogo"><i></i>'+name+'</div><div class="nlinks"><span>Services</span><span>About</span><span>Contact</span><a class="nbtn">'+cta+'</a></div></nav>'
+  +'<section class="hero"><div class="eyebrow">'+esc((biz.industry||'').split('/')[0].trim()||'Local Business')+' &bull; '+loc+'</div><h1>'+head+'</h1><div class="sub">'+sub+'</div>'+chipsHtml+'<div class="cta-row"><a class="btn1">'+cta+'</a>'+callBtn+'</div></section>'
+  +'<div class="trust"><span><b>&#9733;&#9733;&#9733;&#9733;&#9733;</b> 5-Star Rated</span><span>&bull; Trusted in '+loc+'</span><span>&bull; Fast, Friendly Service</span></div>'
+  +'<section class="sec"><h2>What We Offer</h2><div class="ssub">Everything you need from a team that shows up and does it right.</div><div class="svc-grid">'+svc+'</div></section>'
+  +'<section class="contact"><div class="cwrap"><div><h2 style="font-family:\'Barlow Condensed\',sans-serif;font-size:30px;font-weight:900;text-transform:uppercase;margin-bottom:18px">Get In Touch</h2>'+contactLine+'</div><div class="cform"><input placeholder="Your Name"><input placeholder="Email Address"><input placeholder="Phone Number"><textarea placeholder="How can we help?"></textarea><button>Send Message</button></div></div></section>'
+  +'<footer><div class="flogo"><i></i> '+name+'</div><div class="fcopy">&copy; 2026 '+name+'. Site by QUEENEE.io</div></footer>'
+  +aiWidget
+  +'</body></html>';
+
+  frame.srcdoc=html;
 }
 
 function toggleAddon(name,price,link){
