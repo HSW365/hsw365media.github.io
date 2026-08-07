@@ -521,7 +521,6 @@ footer{
   <ul class="nav-links">
     <li><a href="#who">Who We Help</a></li>
     <li><a href="signup.html">Packages</a></li>
-    <li><a href="ai-receptionist.html">AI Receptionist</a></li>
     <li><a href="#process">Process</a></li>
     <li><a href="#pay">Pricing</a></li>
   </ul>
@@ -817,7 +816,6 @@ footer{
           <tr><td>Business Maintenance</td><td>$199 / month</td><td><a href="https://buy.stripe.com/6oUfZhb9tbEG2c6c833VC0g" target="_blank" class="pl">Stripe</a><a href="https://cash.app/$hsw365" target="_blank" class="pl ca">Cash App</a></td></tr>
           <tr><td>Elite Maintenance</td><td>$399 / month</td><td><a href="https://buy.stripe.com/00wfZhb9t5gi5oi9ZV3VC0h" target="_blank" class="pl">Stripe</a><a href="https://cash.app/$hsw365" target="_blank" class="pl ca">Cash App</a></td></tr>
           <tr><td>AI Chatbot Setup</td><td>$299 one-time</td><td><a href="https://buy.stripe.com/cNifZh4L5fUW4ke8VR3VC0i" target="_blank" class="pl">Stripe</a><a href="https://cash.app/$hsw365" target="_blank" class="pl ca">Cash App</a></td></tr>
-          <tr><td>AI Phone Receptionist Setup</td><td>$399 one-time + $99/mo</td><td><a href="mailto:hsw365media@gmail.com?subject=AI Phone Receptionist Inquiry" class="pl em">Contact Us</a><a href="https://cash.app/$hsw365" target="_blank" class="pl ca">Cash App</a></td></tr>
           <tr><td>Email Marketing Setup</td><td>$199 one-time</td><td><a href="https://buy.stripe.com/bJefZh4L538a4keegb3VC0j" target="_blank" class="pl">Stripe</a><a href="https://cash.app/$hsw365" target="_blank" class="pl ca">Cash App</a></td></tr>
           <tr><td>Content Writing (per page)</td><td>$149 per page</td><td><a href="https://buy.stripe.com/4gMaEX6TdeQS2c68VR3VC0k" target="_blank" class="pl">Stripe</a><a href="https://cash.app/$hsw365" target="_blank" class="pl ca">Cash App</a></td></tr>
           <tr><td>Priority Maintenance Upgrade</td><td>$199 / month</td><td><a href="https://buy.stripe.com/14AcN5dhBaAC03Y2xt3VC0l" target="_blank" class="pl">Stripe</a><a href="https://cash.app/$hsw365" target="_blank" class="pl ca">Cash App</a></td></tr>
@@ -851,10 +849,6 @@ footer{
       </div>
 
       <div class="fq">
-        <button class="fq-q" onclick="doFaq(this)">Can an AI answer my business phone calls too? <span class="fq-ic">+</span></button>
-        <div class="fq-a">Yes — the AI Phone Receptionist add-on answers incoming calls 24/7, handles common questions (hours, pricing, services), books appointments straight into your calendar, and texts you a summary after every call. It's especially useful for catching after-hours calls and calls you miss while you're working. Setup is $399 one-time plus $99/month, and it works alongside your website's AI chat — not in place of a human, just so no call goes to a missed-call voicemail again.</div>
-      </div>
-      <div class="fq">
         <button class="fq-q" onclick="doFaq(this)">What does monthly maintenance include? <span class="fq-ic">+</span></button>
         <div class="fq-a">Monthly maintenance covers hosting, SSL certificate renewal, security monitoring and updates, performance optimization, and minor content updates such as text changes, updated hours, or swapping photos. It keeps your site running fast, secure, and up to date every month.</div>
       </div>
@@ -880,7 +874,6 @@ footer{
   <div class="f-links">
     <a href="#who">Who We Help</a>
     <a href="signup.html">Packages</a>
-    <a href="ai-receptionist.html">AI Receptionist</a>
     <a href="#process">Process</a>
     <a href="#pay">Pricing</a>
     <a href="mailto:hsw365media@gmail.com">Contact</a>
@@ -951,8 +944,7 @@ var FAQ_ANSWERS={
   packages:"Here's our lineup:<br>• Starter $499 + $49/mo — up to 5 pages<br>• Growth $999 + $99/mo — up to 10 pages, basic store<br>• Business $1,999 + $199/mo — up to 20 pages, full store, booking, AI chat<br>• Elite $4,999 + $399/mo — unlimited pages, CRM, dedicated manager<br>Want me to recommend one based on your business?",
   payment:"We take a 50% deposit to start (Stripe or Cash App $hsw365), balance due on launch day. Monthly maintenance is billed automatically and you can cancel anytime.",
   timeline:"Most sites are designed and ready for your review within 48–72 hours after our onboarding call, then live within a few days of your approval.",
-  ecommerce:"Yes — Growth and up include an online store (Growth: up to 20 items, Business & Elite: full store, Elite adds subscription billing).",
-  receptionist:"Yes — our AI Phone Receptionist add-on answers your business calls 24/7, handles common questions, books appointments on your calendar, and texts you a summary after each call. It's $399 one-time plus $99/month and works great alongside your website. Want me to add that to your build?"
+  ecommerce:"Yes — Growth and up include an online store (Growth: up to 20 items, Business & Elite: full store, Elite adds subscription billing)."
 };
 
 function toggleChat(){
@@ -1056,7 +1048,6 @@ function showFaqMenu(){
     {label:'Payment',action:function(){botSay(FAQ_ANSWERS.payment);showFaqMenu();}},
     {label:'Timeline',action:function(){botSay(FAQ_ANSWERS.timeline);showFaqMenu();}},
     {label:'E-Commerce',action:function(){botSay(FAQ_ANSWERS.ecommerce);showFaqMenu();}},
-    {label:'AI Phone Receptionist',action:function(){botSay(FAQ_ANSWERS.receptionist);showFaqMenu();}},
     {label:'Tell you about my business instead',action:function(){startQualifier();}}
   ]);
 }
@@ -1067,7 +1058,6 @@ function getResponse(msg){
   if(m.indexOf('pay')>-1||m.indexOf('deposit')>-1){botSay(FAQ_ANSWERS.payment);return;}
   if(m.indexOf('long')>-1||m.indexOf('time')>-1||m.indexOf('fast')>-1||m.indexOf('quick')>-1){botSay(FAQ_ANSWERS.timeline);return;}
   if(m.indexOf('store')>-1||m.indexOf('commerce')>-1||m.indexOf('sell')>-1||m.indexOf('shop')>-1){botSay(FAQ_ANSWERS.ecommerce);return;}
-  if(m.indexOf('phone')>-1||m.indexOf('call')>-1||m.indexOf('receptionist')>-1||m.indexOf('answer')>-1){botSay(FAQ_ANSWERS.receptionist);return;}
   botSay("Good question — for anything specific to your situation, email hsw365media@gmail.com and we'll get back same day. In the meantime, do you currently have a website?");
   renderOptions([
     {label:'No website yet',action:function(){noSite();}},
